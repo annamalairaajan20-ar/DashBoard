@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeamOS — Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden
+    }
+
+    :root {
+      --bg: #0e0c09;
+      --bg2: #161310;
+      --bg3: #1f1a14;
+      --bg4: #2a2218;
+      --border: #332a1e;
+      --border2: #3f3428;
+      --txt: #f5ede0;
+      --txt2: #b89e82;
+      --txt3: #6b5840;
+      --accent: #d4883a;
+      --accent-bg: #2a1a08;
+      --accent-txt: #f0b86a;
+      --accent2: #c06828;
+      --cr: 10px;
+    }
+
+    body {
+      display: flex;
+      background: var(--bg);
+      font-family: 'Segoe UI', system-ui, sans-serif
+    }
+
+    #dash {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      font-size: 13px;
+      background: var(--bg);
+      overflow: hidden
+    }
+
+    #sidebar {
+      width: 216px;
+      background: var(--bg2);
+      border-right: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0
+    }
+
+    .brand {
+      padding: 18px 16px 14px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border-bottom: 0.5px solid var(--border)
+    }
+
+    .brand-icon {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(212, 136, 58, .3)
+    }
+
+    .brand-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--txt);
+      letter-spacing: -.01em
+    }
+
+    .brand-role {
+      font-size: 10px;
+      color: var(--txt3);
+      margin-top: 1px
+    }
+
+    nav {
+      flex: 1;
+      padding: 8px;
+      overflow-y: auto
+    }
+
+    .nav-section {
+      font-size: 10px;
+      color: var(--txt3);
+      padding: 10px 8px 4px;
+      letter-spacing: .07em;
+      text-transform: uppercase
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--txt2);
+      transition: background .15s, color .15s;
+      margin-bottom: 1px
+    }
+
+    .nav-item:hover {
+      background: var(--bg3);
+      color: var(--txt)
+    }
+
+    .nav-item.active {
+      background: var(--accent-bg);
+      color: var(--accent-txt);
+      font-weight: 500
+    }
+
+    .nav-item i {
+      font-size: 15px;
+      flex-shrink: 0
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: #8a2020;
+      color: #f09090;
+      font-size: 10px;
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-weight: 600
+    }
+
+    .sidebar-footer {
+      padding: 10px 8px;
+      border-top: 0.5px solid var(--border)
+    }
+
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    .avatar-row:hover {
+      background: var(--bg3)
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .avatar.sm {
+      width: 24px;
+      height: 24px;
+      font-size: 10px
+    }
+
+    .avatar.green {
+      background: #2a4a10;
+      color: #a0d060
+    }
+
+    .avatar.coral {
+      background: #6a2010;
+      color: #f09060
+    }
+
+    .avatar.purple {
+      background: #2e2870;
+      color: #b0a0f0
+    }
+
+    .avatar.amber {
+      background: #5a3208;
+      color: #f0b860
+    }
+
+    .av-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--txt)
+    }
+
+    .av-sub {
+      font-size: 10px;
+      color: var(--txt3)
+    }
+
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0
+    }
+
+    #topbar {
+      height: 54px;
+      background: var(--bg2);
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 12px;
+      flex-shrink: 0
+    }
+
+    .page-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--txt);
+      flex: 1;
+      letter-spacing: -.01em
+    }
+
+    .page-subtitle {
+      font-size: 11px;
+      color: var(--txt3);
+      margin-top: 1px
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .btn-icon {
+      width: 33px;
+      height: 33px;
+      border-radius: 8px;
+      border: 0.5px solid var(--border2);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--txt2);
+      position: relative;
+      transition: background .15s
+    }
+
+    .btn-icon:hover {
+      background: var(--bg3);
+      color: var(--txt)
+    }
+
+    .btn-icon .dot {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c03030;
+      border: 1.5px solid var(--bg2)
+    }
+
+    .btn-primary {
+      height: 33px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(212, 136, 58, .25);
+      transition: opacity .15s
+    }
+
+    .btn-primary:hover {
+      opacity: .88
+    }
+
+    .search-box {
+      height: 33px;
+      border: 0.5px solid var(--border2);
+      border-radius: 8px;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 11px;
+      color: var(--txt3);
+      font-size: 12px;
+      min-width: 160px
+    }
+
+    #content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--bg)
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px
+    }
+
+    .metric-card {
+      background: var(--bg2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--cr);
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent)
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--txt2);
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    .metric-val {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--txt);
+      line-height: 1.1;
+      letter-spacing: -.02em
+    }
+
+    .metric-change {
+      font-size: 10px;
+      margin-top: 5px
+    }
+
+    .metric-change.up {
+      color: #7abf40
+    }
+
+    .metric-change.down {
+      color: #e05050
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 14px
+    }
+
+    .panel {
+      background: var(--bg2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--cr);
+      padding: 16px 18px
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 13px
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--txt);
+      letter-spacing: -.01em
+    }
+
+    .panel-action {
+      font-size: 11px;
+      color: var(--accent-txt);
+      cursor: pointer;
+      transition: opacity .15s
+    }
+
+    .panel-action:hover {
+      opacity: .7
+    }
+
+    .task-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--border)
+    }
+
+    .task-row:last-child {
+      border-bottom: none
+    }
+
+    .task-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 0.5px solid var(--border2);
+      flex-shrink: 0;
+      margin-top: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--txt2);
+      transition: all .15s
+    }
+
+    .task-check.done {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff
+    }
+
+    .task-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .task-name {
+      font-size: 12px;
+      color: var(--txt)
+    }
+
+    .task-name.done {
+      color: var(--txt3);
+      text-decoration: line-through
+    }
+
+    .task-meta {
+      font-size: 10px;
+      color: var(--txt3);
+      margin-top: 2px
+    }
+
+    .task-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: auto;
+      flex-shrink: 0;
+      font-weight: 500
+    }
+
+    .tag-blue {
+      background: #0d2030;
+      color: #70b0e8
+    }
+
+    .tag-amber {
+      background: #2a1808;
+      color: #d09830
+    }
+
+    .tag-green {
+      background: #1a2e08;
+      color: #80b838
+    }
+
+    .tag-red {
+      background: #300e0e;
+      color: #d85858
+    }
+
+    .tag-purple {
+      background: #1a1840;
+      color: #9888d8
+    }
+
+    .tag-orange {
+      background: #2a1408;
+      color: #d08030
+    }
+
+    .progress-item {
+      margin-bottom: 12px
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin-bottom: 5px
+    }
+
+    .progress-label span {
+      color: var(--txt2)
+    }
+
+    .progress-label strong {
+      color: var(--txt);
+      font-weight: 500
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: var(--bg4);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .3s
+    }
+
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 5px;
+      height: 64px
+    }
+
+    .bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      height: 100%
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 3px 3px 0 0;
+      transition: opacity .15s;
+      width: 100%;
+      max-width: 24px;
+      cursor: pointer;
+      align-self: flex-end
+    }
+
+    .bar:hover {
+      opacity: .7
+    }
+
+    .bar-day {
+      font-size: 9px;
+      color: var(--txt3)
+    }
+
+    .member-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 0.5px solid var(--border)
+    }
+
+    .member-row:last-child {
+      border-bottom: none
+    }
+
+    .member-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .member-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--txt)
+    }
+
+    .member-role {
+      font-size: 10px;
+      color: var(--txt3)
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .dot-online {
+      background: #4caf50
+    }
+
+    .dot-away {
+      background: #ff9800
+    }
+
+    .dot-offline {
+      background: var(--border2)
+    }
+
+    .mini-progress {
+      width: 68px;
+      flex-shrink: 0
+    }
+
+    .mini-bar {
+      height: 4px;
+      background: var(--bg4);
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    .mini-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--accent)
+    }
+
+    .mini-pct {
+      font-size: 10px;
+      color: var(--txt3);
+      margin-top: 2px;
+      text-align: right
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px
+    }
+
+    .donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px
+    }
+
+    .donut-svg {
+      flex-shrink: 0
+    }
+
+    .donut-legend {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--txt2)
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 9px;
+      padding: 7px 0;
+      border-bottom: 0.5px solid var(--border)
+    }
+
+    .activity-item:last-child {
+      border-bottom: none
+    }
+
+    .activity-icon {
+      width: 27px;
+      height: 27px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0
+    }
+
+    .activity-text {
+      flex: 1;
+      min-width: 0
+    }
+
+    .activity-main {
+      font-size: 11px;
+      color: var(--txt);
+      line-height: 1.45
+    }
+
+    .activity-time {
+      font-size: 10px;
+      color: var(--txt3);
+      margin-top: 1px
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 2px;
+      background: var(--bg3);
+      border-radius: 8px;
+      padding: 2px
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 5px 9px;
+      font-size: 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--txt2);
+      transition: all .15s
+    }
+
+    .tab.active {
+      background: var(--bg4);
+      color: var(--txt);
+      font-weight: 500
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 3px
+    }
+  </style>
+</head>
+
+<body>
+  <div id="dash">
+
+    <div id="sidebar">
+      <div class="brand">
+        <div class="brand-icon"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></div>
+        <div>
+          <div class="brand-name">TeamOS</div>
+          <div class="brand-role">Admin workspace</div>
+        </div>
+      </div>
+      <nav>
+        <div class="nav-section">Main</div>
+        <div class="nav-item active" onclick="switchView('overview',this)"><i class="ti ti-home" aria-hidden="true"></i>
+          Overview</div>
+        <div class="nav-item" onclick="switchView('tasks',this)"><i class="ti ti-checklist" aria-hidden="true"></i>
+          Tasks <span class="nav-badge">5</span></div>
+        <div class="nav-item" onclick="switchView('team',this)"><i class="ti ti-users" aria-hidden="true"></i> Team
+        </div>
+        <div class="nav-item" onclick="switchView('projects',this)"><i class="ti ti-folder" aria-hidden="true"></i>
+          Projects</div>
+        <div class="nav-section">Insights</div>
+        <div class="nav-item" onclick="switchView('reports',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i>
+          Reports</div>
+        <div class="nav-item" onclick="switchView('activity',this)"><i class="ti ti-activity" aria-hidden="true"></i>
+          Activity</div>
+        <div class="nav-section">Admin</div>
+        <div class="nav-item"><i class="ti ti-settings" aria-hidden="true"></i> Settings</div>
+        <div class="nav-item"><i class="ti ti-shield" aria-hidden="true"></i> Permissions</div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="avatar-row">
+          <div class="avatar">SC</div>
+          <div>
+            <div class="av-name">Sarah Chen</div>
+            <div class="av-sub">Administrator</div>
+          </div>
+          <i class="ti ti-chevron-down" style="margin-left:auto;font-size:13px;color:var(--txt3)"
+            aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+
+    <div id="main">
+      <div id="topbar">
+        <div>
+          <div class="page-title" id="page-title">Overview</div>
+          <div class="page-subtitle" id="page-sub">Monday, June 8, 2026 · Q2 Week 10</div>
+        </div>
+        <div class="topbar-actions">
+          <div class="search-box"><i class="ti ti-search" style="font-size:13px" aria-hidden="true"></i> Search...</div>
+          <div class="btn-icon" title="Notifications"><i class="ti ti-bell" style="font-size:16px"
+              aria-hidden="true"></i><span class="dot"></span></div>
+          <div class="btn-icon" title="Calendar"><i class="ti ti-calendar" style="font-size:16px"
+              aria-hidden="true"></i></div>
+          <button class="btn-primary"><i class="ti ti-plus" style="font-size:13px" aria-hidden="true"></i> New
+            task</button>
+        </div>
+      </div>
+
+      <div id="content">
+
+        <!-- OVERVIEW -->
+        <div id="view-overview">
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label"><i class="ti ti-users" style="color:var(--accent)" aria-hidden="true"></i> Total
+                employees</div>
+              <div class="metric-val">128</div>
+              <div class="metric-change up"><i class="ti ti-arrow-up-right" style="font-size:10px"
+                  aria-hidden="true"></i> +4 this month</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label"><i class="ti ti-checklist" style="color:#7abf40" aria-hidden="true"></i> Tasks
+                completed</div>
+              <div class="metric-val">347</div>
+              <div class="metric-change up"><i class="ti ti-arrow-up-right" style="font-size:10px"
+                  aria-hidden="true"></i> +12% vs last week</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label"><i class="ti ti-clock" style="color:var(--accent)" aria-hidden="true"></i> Avg.
+                productivity</div>
+              <div class="metric-val">78%</div>
+              <div class="metric-change down"><i class="ti ti-arrow-down-right" style="font-size:10px"
+                  aria-hidden="true"></i> −3% vs last week</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label"><i class="ti ti-alert-triangle" style="color:#e06060" aria-hidden="true"></i>
+                Overdue tasks</div>
+              <div class="metric-val">14</div>
+              <div class="metric-change down"><i class="ti ti-arrow-up-right" style="font-size:10px"
+                  aria-hidden="true"></i> +2 since yesterday</div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">My tasks</div>
+                <div class="tab-bar" style="margin:0;width:180px">
+                  <div class="tab active" onclick="filterTasks('all',this)">All</div>
+                  <div class="tab" onclick="filterTasks('active',this)">Active</div>
+                  <div class="tab" onclick="filterTasks('done',this)">Done</div>
+                </div>
+              </div>
+              <div id="task-list">
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Review Q2 budget allocation</div>
+                    <div class="task-meta"><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Due
+                      today · Finance</div>
+                  </div><span class="task-tag tag-red">Urgent</span>
+                </div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Approve 3 pending leave requests</div>
+                    <div class="task-meta"><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Due
+                      today · HR</div>
+                  </div><span class="task-tag tag-amber">Medium</span>
+                </div>
+                <div class="task-row" data-status="done">
+                  <div class="task-check done" onclick="toggleTask(this)"><i class="ti ti-check" style="font-size:9px"
+                      aria-hidden="true"></i></div>
+                  <div class="task-info">
+                    <div class="task-name done">Send onboarding docs to new hires</div>
+                    <div class="task-meta"><i class="ti ti-clock" style="font-size:10px" aria-hidden="true"></i>
+                      Completed 9:14 AM</div>
+                  </div><span class="task-tag tag-green">Done</span>
+                </div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Update roles for design team</div>
+                    <div class="task-meta"><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Due
+                      Jun 10 · Admin</div>
+                  </div><span class="task-tag tag-blue">Low</span>
+                </div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Conduct performance review — Priya</div>
+                    <div class="task-meta"><i class="ti ti-calendar" style="font-size:10px" aria-hidden="true"></i> Due
+                      Jun 12 · HR</div>
+                  </div><span class="task-tag tag-purple">Review</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Team members</div>
+                <div class="panel-action">View all →</div>
+              </div>
+              <div class="member-row">
+                <div class="avatar sm green">PK</div>
+                <div class="member-info">
+                  <div class="member-name">Priya Kumar</div>
+                  <div class="member-role">Senior Designer</div>
+                </div>
+                <div class="status-dot dot-online"></div>
+                <div class="mini-progress">
+                  <div class="mini-bar">
+                    <div class="mini-fill" style="width:88%"></div>
+                  </div>
+                  <div class="mini-pct">88%</div>
+                </div>
+              </div>
+              <div class="member-row">
+                <div class="avatar sm coral">JL</div>
+                <div class="member-info">
+                  <div class="member-name">James Liu</div>
+                  <div class="member-role">Frontend Dev</div>
+                </div>
+                <div class="status-dot dot-online"></div>
+                <div class="mini-progress">
+                  <div class="mini-bar">
+                    <div class="mini-fill" style="width:72%"></div>
+                  </div>
+                  <div class="mini-pct">72%</div>
+                </div>
+              </div>
+              <div class="member-row">
+                <div class="avatar sm purple">AM</div>
+                <div class="member-info">
+                  <div class="member-name">Aisha Mensah</div>
+                  <div class="member-role">Project Manager</div>
+                </div>
+                <div class="status-dot dot-away"></div>
+                <div class="mini-progress">
+                  <div class="mini-bar">
+                    <div class="mini-fill" style="width:65%"></div>
+                  </div>
+                  <div class="mini-pct">65%</div>
+                </div>
+              </div>
+              <div class="member-row">
+                <div class="avatar sm amber">RS</div>
+                <div class="member-info">
+                  <div class="member-name">Ravi Shah</div>
+                  <div class="member-role">Backend Dev</div>
+                </div>
+                <div class="status-dot dot-offline"></div>
+                <div class="mini-progress">
+                  <div class="mini-bar">
+                    <div class="mini-fill" style="width:54%"></div>
+                  </div>
+                  <div class="mini-pct">54%</div>
+                </div>
+              </div>
+              <div class="member-row">
+                <div class="avatar sm">NT</div>
+                <div class="member-info">
+                  <div class="member-name">Nina Torres</div>
+                  <div class="member-role">QA Engineer</div>
+                </div>
+                <div class="status-dot dot-online"></div>
+                <div class="mini-progress">
+                  <div class="mini-bar">
+                    <div class="mini-fill" style="width:91%"></div>
+                  </div>
+                  <div class="mini-pct">91%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="three-col">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Weekly output</div>
+                <div class="panel-action">This week</div>
+              </div>
+              <div class="bar-chart">
+                <div class="bar-wrap">
+                  <div class="bar" style="height:55%;background:#3d2210"></div>
+                  <div class="bar-day">M</div>
+                </div>
+                <div class="bar-wrap">
+                  <div class="bar" style="height:80%;background:#5a3418"></div>
+                  <div class="bar-day">T</div>
+                </div>
+                <div class="bar-wrap">
+                  <div class="bar" style="height:65%;background:#3d2210"></div>
+                  <div class="bar-day">W</div>
+                </div>
+                <div class="bar-wrap">
+                  <div class="bar" style="height:90%;background:#5a3418"></div>
+                  <div class="bar-day">T</div>
+                </div>
+                <div class="bar-wrap">
+                  <div class="bar" style="height:72%;background:var(--accent)"></div>
+                  <div class="bar-day">F</div>
+                </div>
+                <div class="bar-wrap">
+                  <div class="bar" style="height:30%;background:#3d2210;opacity:.5"></div>
+                  <div class="bar-day">S</div>
+                </div>
+                <div class="bar-wrap">
+                  <div class="bar" style="height:10%;background:#3d2210;opacity:.3"></div>
+                  <div class="bar-day">S</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:8px">
+                <span>0 tasks</span><span>60 tasks</span></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Projects by status</div>
+                <div class="panel-action">Q2</div>
+              </div>
+              <div class="donut-wrap">
+                <svg class="donut-svg" width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
+                  <circle cx="36" cy="36" r="28" fill="none" stroke="#1f1a14" stroke-width="12" />
+                  <circle cx="36" cy="36" r="28" fill="none" stroke="#d4883a" stroke-width="12"
+                    stroke-dasharray="70 106" stroke-dashoffset="0" transform="rotate(-90 36 36)" />
+                  <circle cx="36" cy="36" r="28" fill="none" stroke="#6a3a10" stroke-width="12"
+                    stroke-dasharray="44 132" stroke-dashoffset="-70" transform="rotate(-90 36 36)" />
+                  <circle cx="36" cy="36" r="28" fill="none" stroke="#8a6020" stroke-width="12"
+                    stroke-dasharray="28 148" stroke-dashoffset="-114" transform="rotate(-90 36 36)" />
+                  <circle cx="36" cy="36" r="28" fill="none" stroke="#8a2020" stroke-width="12"
+                    stroke-dasharray="14 162" stroke-dashoffset="-142" transform="rotate(-90 36 36)" />
+                  <text x="36" y="38" text-anchor="middle" font-size="11" font-weight="600" fill="#f0b86a">12</text>
+                </svg>
+                <div class="donut-legend">
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#d4883a"></div> On track <strong
+                      style="margin-left:auto;color:var(--txt)">5</strong>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#6a3a10"></div> In progress <strong
+                      style="margin-left:auto;color:var(--txt)">4</strong>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#8a6020"></div> At risk <strong
+                      style="margin-left:auto;color:var(--txt)">2</strong>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#8a2020"></div> Overdue <strong
+                      style="margin-left:auto;color:var(--txt)">1</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Recent activity</div>
+                <div class="panel-action">See all</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:#1a2e08;color:#80b838"><i class="ti ti-check"
+                    aria-hidden="true"></i></div>
+                <div class="activity-text">
+                  <div class="activity-main"><strong style="font-weight:500">Priya</strong> completed "Landing page
+                    redesign"</div>
+                  <div class="activity-time">2 min ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:#1a1840;color:#9888d8"><i class="ti ti-user-plus"
+                    aria-hidden="true"></i></div>
+                <div class="activity-text">
+                  <div class="activity-main">New hire <strong style="font-weight:500">Leo Park</strong> joined
+                    Engineering</div>
+                  <div class="activity-time">34 min ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:#2a1808;color:#d09830"><i class="ti ti-alert-triangle"
+                    aria-hidden="true"></i></div>
+                <div class="activity-text">
+                  <div class="activity-main">Task "API migration" flagged as at risk</div>
+                  <div class="activity-time">1 hr ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:var(--accent-bg);color:var(--accent-txt)"><i
+                    class="ti ti-message" aria-hidden="true"></i></div>
+                <div class="activity-text">
+                  <div class="activity-main"><strong style="font-weight:500">James</strong> commented on Sprint 14 board
+                  </div>
+                  <div class="activity-time">2 hr ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TASKS -->
+        <div id="view-tasks" style="display:none">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">All tasks</div><button class="btn-primary"
+                style="font-size:11px;height:28px;padding:0 10px"><i class="ti ti-plus" style="font-size:11px"
+                  aria-hidden="true"></i> Add task</button>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div>
+                <div
+                  style="font-size:11px;font-weight:600;color:var(--txt2);margin-bottom:9px;text-transform:uppercase;letter-spacing:.06em">
+                  To do</div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Set up CI/CD pipeline</div>
+                    <div class="task-meta">James · Jun 14</div>
+                  </div><span class="task-tag tag-blue">Dev</span>
+                </div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Write Q2 retrospective</div>
+                    <div class="task-meta">Aisha · Jun 15</div>
+                  </div><span class="task-tag tag-purple">Mgmt</span>
+                </div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Update privacy policy</div>
+                    <div class="task-meta">Legal · Jun 20</div>
+                  </div><span class="task-tag tag-amber">Legal</span>
+                </div>
+              </div>
+              <div>
+                <div
+                  style="font-size:11px;font-weight:600;color:var(--txt2);margin-bottom:9px;text-transform:uppercase;letter-spacing:.06em">
+                  In progress</div>
+                <div class="task-row">
+                  <div class="task-check done" onclick="toggleTask(this)"><i class="ti ti-check" style="font-size:9px"
+                      aria-hidden="true"></i></div>
+                  <div class="task-info">
+                    <div class="task-name done">Dashboard wireframes v2</div>
+                    <div class="task-meta">Priya · Jun 8</div>
+                  </div><span class="task-tag tag-green">Done</span>
+                </div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">Database optimisation</div>
+                    <div class="task-meta">Ravi · Jun 11</div>
+                  </div><span class="task-tag tag-red">Urgent</span>
+                </div>
+                <div class="task-row" data-status="active">
+                  <div class="task-check" onclick="toggleTask(this)"></div>
+                  <div class="task-info">
+                    <div class="task-name">QA regression suite</div>
+                    <div class="task-meta">Nina · Jun 12</div>
+                  </div><span class="task-tag tag-blue">QA</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TEAM -->
+        <div id="view-team" style="display:none">
+          <div class="metric-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+            <div class="metric-card">
+              <div class="metric-label">Total headcount</div>
+              <div class="metric-val">128</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Departments</div>
+              <div class="metric-val">7</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Avg. tenure</div>
+              <div class="metric-val">2.4 yr</div>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel-header">
+              <div class="panel-title">Department productivity</div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><strong>Engineering</strong><span>86%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:86%;background:#d4883a"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><strong>Design</strong><span>91%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:91%;background:#9888d8"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><strong>Marketing</strong><span>74%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:74%;background:#4a9020"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><strong>HR</strong><span>68%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:68%;background:#c08820"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><strong>Sales</strong><span>79%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:79%;background:#c04030"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJECTS -->
+        <div id="view-projects" style="display:none">
+          <div class="three-col">
+            <div class="panel" style="border-top:2px solid var(--accent);border-radius:0 0 10px 10px">
+              <div style="font-size:10px;color:var(--accent-txt);font-weight:600;margin-bottom:6px">ON TRACK</div>
+              <div class="panel-title">Website Redesign</div>
+              <div style="font-size:11px;color:var(--txt3);margin:6px 0 10px">Design · Development</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:74%;background:var(--accent)"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:4px">
+                <span>74% complete</span><span>Due Jul 1</span></div>
+              <div style="display:flex;gap:4px;margin-top:10px">
+                <div class="avatar sm green">PK</div>
+                <div class="avatar sm coral">JL</div>
+                <div class="avatar sm">NT</div>
+              </div>
+            </div>
+            <div class="panel" style="border-top:2px solid #c08820;border-radius:0 0 10px 10px">
+              <div style="font-size:10px;color:#d09830;font-weight:600;margin-bottom:6px">AT RISK</div>
+              <div class="panel-title">API Migration v3</div>
+              <div style="font-size:11px;color:var(--txt3);margin:6px 0 10px">Engineering · DevOps</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:41%;background:#c08820"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:4px">
+                <span>41% complete</span><span>Due Jun 20</span></div>
+              <div style="display:flex;gap:4px;margin-top:10px">
+                <div class="avatar sm coral">JL</div>
+                <div class="avatar sm amber">RS</div>
+              </div>
+            </div>
+            <div class="panel" style="border-top:2px solid #4a9020;border-radius:0 0 10px 10px">
+              <div style="font-size:10px;color:#80b838;font-weight:600;margin-bottom:6px">COMPLETE</div>
+              <div class="panel-title">Brand Guidelines</div>
+              <div style="font-size:11px;color:var(--txt3);margin:6px 0 10px">Design · Marketing</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:100%;background:#4a9020"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-top:4px">
+                <span>100% complete</span><span>Jun 1</span></div>
+              <div style="display:flex;gap:4px;margin-top:10px">
+                <div class="avatar sm green">PK</div>
+                <div class="avatar sm purple">AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- REPORTS -->
+        <div id="view-reports" style="display:none">
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Tasks this month</div>
+              <div class="metric-val">847</div>
+              <div class="metric-change up">+18% MoM</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Completion rate</div>
+              <div class="metric-val">92%</div>
+              <div class="metric-change up">+5% MoM</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Avg. time to close</div>
+              <div class="metric-val">3.2d</div>
+              <div class="metric-change up">−0.4d faster</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">SLA breaches</div>
+              <div class="metric-val">6</div>
+              <div class="metric-change down">+2 MoM</div>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:14px">
+            <div class="panel-header">
+              <div class="panel-title">Monthly task completion trend</div>
+              <div class="panel-action">Export CSV</div>
+            </div>
+            <div class="bar-chart" style="height:80px;gap:10px">
+              <div class="bar-wrap">
+                <div class="bar" style="height:60%;background:#3d2210"></div>
+                <div class="bar-day">Jan</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar" style="height:72%;background:#5a3418"></div>
+                <div class="bar-day">Feb</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar" style="height:65%;background:#3d2210"></div>
+                <div class="bar-day">Mar</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar" style="height:80%;background:#7a4820"></div>
+                <div class="bar-day">Apr</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar" style="height:88%;background:var(--accent)"></div>
+                <div class="bar-day">May</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar" style="height:92%;background:#f0a860"></div>
+                <div class="bar-day">Jun</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY -->
+        <div id="view-activity" style="display:none">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Live activity feed</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#1a2e08;color:#80b838"><i class="ti ti-check"
+                  aria-hidden="true"></i></div>
+              <div class="activity-text">
+                <div class="activity-main"><strong style="font-weight:500">Priya</strong> completed "Landing page
+                  redesign"</div>
+                <div class="activity-time">2 min ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#1a1840;color:#9888d8"><i class="ti ti-user-plus"
+                  aria-hidden="true"></i></div>
+              <div class="activity-text">
+                <div class="activity-main">New hire <strong style="font-weight:500">Leo Park</strong> joined Engineering
+                </div>
+                <div class="activity-time">34 min ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#2a1808;color:#d09830"><i class="ti ti-alert-triangle"
+                  aria-hidden="true"></i></div>
+              <div class="activity-text">
+                <div class="activity-main">Task "API migration" flagged as at risk</div>
+                <div class="activity-time">1 hr ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:var(--accent-bg);color:var(--accent-txt)"><i
+                  class="ti ti-message" aria-hidden="true"></i></div>
+              <div class="activity-text">
+                <div class="activity-main"><strong style="font-weight:500">James</strong> commented on Sprint 14 board
+                </div>
+                <div class="activity-time">2 hr ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#300e0e;color:#d85858"><i class="ti ti-clock"
+                  aria-hidden="true"></i></div>
+              <div class="activity-text">
+                <div class="activity-main">Task "DB migration" is now overdue</div>
+                <div class="activity-time">3 hr ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#1a2e08;color:#80b838"><i class="ti ti-file"
+                  aria-hidden="true"></i></div>
+              <div class="activity-text">
+                <div class="activity-main"><strong style="font-weight:500">Aisha</strong> uploaded Q2 sprint planning
+                  doc</div>
+                <div class="activity-time">4 hr ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const views = ['overview', 'tasks', 'team', 'projects', 'reports', 'activity'];
+    const titles = { overview: 'Overview', tasks: 'Tasks', team: 'Team', projects: 'Projects', reports: 'Reports', activity: 'Activity' };
+    const subs = { overview: 'Monday, June 8, 2026 · Q2 Week 10', tasks: 'Manage and track your tasks', team: '128 employees across 7 departments', projects: '12 active projects', reports: 'Q2 performance insights', activity: 'Live activity feed' };
+    function switchView(v, el) {
+      views.forEach(k => { const d = document.getElementById('view-' + k); if (d) d.style.display = k === v ? '' : 'none'; });
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (el) el.classList.add('active');
+      document.getElementById('page-title').textContent = titles[v] || v;
+      document.getElementById('page-sub').textContent = subs[v] || '';
+    }
+    function toggleTask(el) {
+      el.classList.toggle('done');
+      const nm = el.parentElement.querySelector('.task-name');
+      if (nm) nm.classList.toggle('done');
+      el.innerHTML = el.classList.contains('done') ? '<i class="ti ti-check" style="font-size:9px" aria-hidden="true"></i>' : '';
+    }
+    function filterTasks(f, tab) {
+      document.querySelectorAll('#view-overview .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('#task-list .task-row').forEach(row => {
+        const s = row.dataset.status;
+        row.style.display = (f === 'all' || f === s || (!s && f === 'done')) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+
+</html>
